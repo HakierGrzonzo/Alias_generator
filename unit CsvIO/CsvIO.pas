@@ -32,6 +32,11 @@ Interface
 		
 implementation
 
+	procedure invert(var flag2:boolean);
+		begin
+			if flag2 then flag2:=false else flag2:=false;
+		end;
+
 	function comma:char;
 		begin
 			if usecomma then comma:=',' else comma:=';';
@@ -47,6 +52,34 @@ implementation
 		end;
 	
 	function CsVFile.readString(xpos:longint):string;
+		var
+			i,x:integer;
+			str,str2:string;
+			flag2:boolean;
+		begin
+			i:=0;
+			x:=0;
+			read(f,str);
+			while not i=xpos do 
+				begin
+					while not str[x]=';' do
+						begin
+							skipstring(x,str);
+							x+=1;
+						end;
+					i+=1;
+				end;
+			i:=0;
+			flag2:=false;
+			while true do
+				begin
+					if (str[x]='"') then invert(flag2);
+					if (str[x]='"') then x+=1;
+					if (str[x]=';') and (not flag2) then break;
+					str2+=str[x];
+				end;
+			readstring:=str2;
+		end;				
 	
 	procedure CsvFile.init(name:string);
 		begin
